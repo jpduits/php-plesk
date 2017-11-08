@@ -58,6 +58,10 @@ EOT;
         for ($i = 0; $i < count($xml->webspace->get->result); $i++) {
             $webspace = $xml->webspace->get->result[$i];
 
+            // see: https://github.com/pmill/php-plesk/issues/54
+            if ( $webspace->status  != "ok" )
+                continue;
+
             $hosting = [];
             foreach ($webspace->data->hosting->children() as $host) {
                 $hosting[$host->getName()] = Xml::getProperties($host);

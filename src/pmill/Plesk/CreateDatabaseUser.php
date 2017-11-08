@@ -8,12 +8,15 @@ class CreateDatabaseUser extends BaseRequest
      */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
-<packet version="1.6.5.0">
+<packet version="1.6.9.0">
 <database>
     <add-db-user>
         {OPTIONS}
         <login>{USERNAME}</login>
         <password>{PASSWORD}</password>
+        <allow-access-from>
+            <ip-address>{ALLOW_ACCESS_FROM}</ip-address>
+        </allow-access-from>
     </add-db-user>
 </database>
 </packet>
@@ -30,7 +33,8 @@ EOT;
     protected $default_params = [
         'options' => null,
         'username' => null,
-        'password' => null
+        'password' => null,
+        'allow_access_from' => null,
     ];
 
     public function __construct($config, $params)

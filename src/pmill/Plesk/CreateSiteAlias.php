@@ -8,7 +8,7 @@ class CreateSiteAlias extends BaseRequest
      */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
-<packet version="1.6.3.5">
+<packet version="1.6.7.0">
     <site-alias>
         <create>
             <status>0</status>
@@ -16,7 +16,9 @@ class CreateSiteAlias extends BaseRequest
                 <web>{WEB_ENABLED}</web>
                 <mail>{MAIL_ENABLED}</mail>
                 <tomcat>{TOMCAT_ENABLED}</tomcat>
+                <seo-redirect>{SEO_REDIRECT}</seo-redirect>
             </pref>
+            <manage-dns>{MANAGE_DNS}</manage-dns>
             <site-id>{SITE_ID}</site-id>
             <name>{ALIAS}</name>
         </create>
@@ -38,6 +40,8 @@ EOT;
         'web_enabled' => 1,
         'mail_enabled' => 0,
         'tomcat_enabled' => 0,
+        'seo_redirect' => 0,
+        'manage_dns' => 0
     ];
 
     /**
