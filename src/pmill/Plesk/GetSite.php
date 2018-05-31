@@ -8,17 +8,17 @@ class GetSite extends BaseRequest
      */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
-<packet version="1.6.0.0">
-<domain>
+<packet version="1.6.7.0">
+<site>
 	<get>
 		<filter>
-			<domain-name>{DOMAIN}</domain-name>
+			<name>{DOMAIN}</name>
 		</filter>
 		<dataset>
 			<hosting/>
 		</dataset>
 	</get>
-</domain>
+</site>
 </packet>
 EOT;
 
@@ -36,28 +36,28 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        $site = $xml->domain->get->result;
+        $result = $xml->domain->get->result;
 
-        if ((string)$site->status == 'error') {
-            throw new ApiRequestException($site);
+        if ((string)$result->status == 'error') {
+            throw new ApiRequestException($result);
         }
-        if ((string)$site->result->status == 'error') {
-            throw new ApiRequestException($site->result);
+        if ((string)$result->result->status == 'error') {
+            throw new ApiRequestException($result->result);
         }
 
-        $hosting_type = (string)$site->data->gen_info->htype;
+        $hosting_type = (string)$result->data->gen_info->htype;
 
         return [
-            'id' => (string)$site->id,
-            'status' => (string)$site->status,
-            'created' => (string)$site->data->gen_info->cr_date,
-            'name' => (string)$site->data->gen_info->name,
-            'ip' => (string)$site->data->gen_info->dns_ip_address,
+            'id' => (string)$result->id,
+            'status' => (string)$result->status,
+            'created' => (string)$result->data->gen_info->cr_date,
+            'name' => (string)$result->data->gen_info->name,
+            'ip' => (string)$result->data->gen_info->dns_ip_address,
             'hosting_type' => $hosting_type,
-            'ip_address' => (string)$site->data->hosting->{$hosting_type}->ip_address,
-            'www_root' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'www_root'),
-            'ftp_username' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_login'),
-            'ftp_password' => $this->findHostingProperty($site->data->hosting->{$hosting_type}, 'ftp_password'),
+            'ip_address' => (string)$result->data->hosting->{$hosting_type}->ip_address,
+            'www_root' => $this->findHostingProperty($result->data->hosting->{$hosting_type}, 'www_root'),
+            'ftp_username' => $this->findHostingProperty($result->data->hosting->{$hosting_type}, 'ftp_login'),
+            'ftp_password' => $this->findHostingProperty($result->data->hosting->{$hosting_type}, 'ftp_password'),
         ];
     }
 
