@@ -8,7 +8,7 @@ class GetSite extends BaseRequest
      */
     public $xml_packet = <<<EOT
 <?xml version="1.0"?>
-<packet version="1.6.7.0">
+<packet version="1.6.9.1">
 <site>
 	<get>
 		<filter>
@@ -36,7 +36,7 @@ EOT;
      */
     protected function processResponse($xml)
     {
-        $result = $xml->domain->get->result;
+        $result = $xml->site->get->result;
 
         if ((string)$result->status == 'error') {
             throw new ApiRequestException($result);
@@ -45,7 +45,7 @@ EOT;
             throw new ApiRequestException($result->result);
         }
 
-        $hosting_type = (string)$result->data->gen_info->htype;
+        $hosting_type = (string)$result->data->hosting->vrt_hst;
 
         return [
             'id' => (string)$result->id,
@@ -54,10 +54,10 @@ EOT;
             'name' => (string)$result->data->gen_info->name,
             'ip' => (string)$result->data->gen_info->dns_ip_address,
             'hosting_type' => $hosting_type,
-            'ip_address' => (string)$result->data->hosting->{$hosting_type}->ip_address,
-            'www_root' => $this->findHostingProperty($result->data->hosting->{$hosting_type}, 'www_root'),
-            'ftp_username' => $this->findHostingProperty($result->data->hosting->{$hosting_type}, 'ftp_login'),
-            'ftp_password' => $this->findHostingProperty($result->data->hosting->{$hosting_type}, 'ftp_password'),
+            'ip_address' => (string)$result->data->hosting->vrt_hst->ip_address,
+            'www_root' => $this->findHostingProperty($result->data->hosting->vrt_hst, 'www_root'),
+            'ftp_username' => $this->findHostingProperty($result->data->hosting->vrt_hst, 'ftp_login'),
+            'ftp_password' => $this->findHostingProperty($result->data->hosting->vrt_hst, 'ftp_password'),
         ];
     }
 
