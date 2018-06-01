@@ -39,6 +39,9 @@ EOT;
         $result = $xml->site->get->result;
 
         if ((string)$result->status == 'error') {
+            // if domain not exists
+            if ((string)$result->errcode == '1013')
+                return false;
             throw new ApiRequestException($result);
         }
         if ((string)$result->result->status == 'error') {
